@@ -1,11 +1,11 @@
 class Elasticsearch < FPM::Cookery::Recipe
   description 'Open Source, Distributed, RESTful Search Engine'
   name        'elasticsearch'
-  version     '0.18.7'
+  version     '0.19.11'
   revision    '1'
   homepage    'http://www.elasticsearch.org/'
   source      "https://github.com/downloads/elasticsearch/elasticsearch/elasticsearch-#{version}.tar.gz"
-  sha256      '654642232077ef8decb64b553bf3216c8c9f2bdd157bc837667bc6120900e10f'
+  sha256      '214096db24e90b429e667b0ec23c9f97426bdf2f46d1105dcbf3334468984b1c'
   arch        'all'
   section     'database'
 
@@ -23,14 +23,23 @@ class Elasticsearch < FPM::Cookery::Recipe
     '/etc/default/elasticsearch'
 
   post_install   'post-install'
+  pre_uninstall  'pre-install'
   post_uninstall 'post-uninstall'
+
+  def share (path = nil)
+	  opt/path
+  end
+
+  def bin (path =  nil)
+	  share/bin/path
+  end
 
   def build
     rm_f Dir['bin/*.bat']
     mv 'bin/plugin', 'bin/elasticsearch-plugin'
 
     inline_replace %w{bin/elasticsearch bin/elasticsearch-plugin} do |s|
-      s.gsub! %{ES_HOME=`dirname "$SCRIPT"`/..}, 'ES_HOME=/usr/share/elasticsearch/'
+      s.gsub! %{ES_HOME=`dirname "$SCRIPT"`/..}, 'ES_HOME=/opt/elasticsearch/'
     end
 
     inline_replace 'bin/elasticsearch.in.sh' do |s|
@@ -46,13 +55,14 @@ class Elasticsearch < FPM::Cookery::Recipe
   end
 
   def install
-    bin.install Dir['bin/elasticsearch{,-plugin}']
     etc('elasticsearch').install Dir['config/*']
     etc('init.d').install_p workdir('elasticsearch.init'), 'elasticsearch'
     etc('default').install_p workdir('elasticsearch.default'), 'elasticsearch'
     etc('security/limits.d').install_p workdir('elasticsearch.limits'), 'elasticsearch.conf'
-    share('elasticsearch').install Dir['{bin/elasticsearch.in.sh,lib,plugins,*.*}']
     var('lib/elasticsearch').mkpath
     var('log/elasticsearch').mkpath
+    # --[ Elasticsearch HOME ]--
+    bin.install Dir['bin/elasticsearch{,-plugin}']
+    share('elasticsearch').install Dir['{bin/elasticsearch.in.sh,lib,plugins,*.*}']
   end
 end
