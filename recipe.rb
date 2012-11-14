@@ -23,7 +23,7 @@ class Elasticsearch < FPM::Cookery::Recipe
     '/etc/default/elasticsearch'
 
   post_install   'post-install'
-  pre_uninstall  'pre-install'
+  pre_uninstall  'pre-uninstall'
   post_uninstall 'post-uninstall'
 
   def share (path = nil)
