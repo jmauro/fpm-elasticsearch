@@ -3,8 +3,8 @@ set -e
 
 case "$1" in
 	remove)
-		[ -x /sbin/insserv ] && /sbin/inserv -r elasticsearch
-		[ -x /sbin/chkconfig ] && /sbin/chkconfig -del elasticsearch
+		[ -x /sbin/insserv ] && /sbin/insserv -r elasticsearch
+		[ -x /sbin/chkconfig ] && /sbin/chkconfig -del elasticsearch > /dev/null
 		
 	;;
 

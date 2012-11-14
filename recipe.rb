@@ -27,11 +27,11 @@ class Elasticsearch < FPM::Cookery::Recipe
   post_uninstall 'post-uninstall'
 
   def share (path = nil)
-	  opt/path
+	  opt('elasticsearch')/path
   end
 
   def bin (path =  nil)
-	  share/bin/path
+	  share('bin')/path
   end
 
   def build
@@ -63,6 +63,6 @@ class Elasticsearch < FPM::Cookery::Recipe
     var('log/elasticsearch').mkpath
     # --[ Elasticsearch HOME ]--
     bin.install Dir['bin/elasticsearch{,-plugin}']
-    share('elasticsearch').install Dir['{bin/elasticsearch.in.sh,lib,plugins,*.*}']
+    share.install Dir['{bin/elasticsearch.in.sh,lib,plugins,*.*}']
   end
 end

@@ -21,7 +21,7 @@ case "$1" in
 		install -d -o "$user" -g "$group" -m 0755 "$datadir"
 		install -d -o "$user" -g "$group" -m 0755 "$logdir"
 
-		[ -x /sbin/insserv ] && /sbin/inserv elasticsearch
-		[ -x /sbin/chkconfig ] && /sbin/chkconfig -add elasticsearch
+		[ -x /sbin/insserv ] && /sbin/insserv elasticsearch
+		[ -x /sbin/chkconfig ] && /sbin/chkconfig -add elasticsearch > /dev/null
 	;;
 esac
