@@ -21,10 +21,10 @@
 
 set -e
 
-PATH=/bin:/usr/bin:/sbin:/usr/sbin
-NAME=elasticsearch
+PATH="/bin:/usr/bin:/sbin:/usr/sbin"
+NAME="elasticsearch"
 DESC="ElasticSearch Server"
-DEFAULT=/etc/default/$NAME
+DEFAULT="/etc/default/$NAME"
 
 if [ `id -u` -ne 0 ]; then
 	echo "You need root privileges to run this script"
@@ -42,8 +42,8 @@ fi
 # The following variables can be overwritten in $DEFAULT
 
 # Run ElasticSearch as this user ID and group ID
-ES_USER=elasticsearch
-ES_GROUP=elasticsearch
+ES_USER="elasticsearch"
+ES_GROUP="elasticsearch"
 
 # The first existing directory is used for JAVA_HOME (if JAVA_HOME is not defined in $DEFAULT)
 JDK_DIRS="/usr/lib/jvm/java-7-oracle /usr/lib/jvm/java-6-sun /usr/lib/jvm/java-7-openjdk /usr/lib/jvm/java-6-openjdk"
@@ -57,7 +57,7 @@ done
 export JAVA_HOME
 
 # Directory where the ElasticSearch binary distribution resides
-ES_HOME=/usr/share/$NAME
+ES_HOME="/opt/$NAME"
 
 # Heap Size (defaults to 256m min, 1g max)
 #ES_HEAP_SIZE=2g
@@ -66,31 +66,32 @@ ES_HOME=/usr/share/$NAME
 #ES_JAVA_OPTS=
 
 # ElasticSearch log directory
-LOG_DIR=/var/log/$NAME
+LOG_DIR="/var/log/$NAME"
 
 # ElasticSearch data directory
-DATA_DIR=/var/lib/$NAME
+DATA_DIR="/var/lib/$NAME"
 
 # ElasticSearch work directory
-WORK_DIR=/tmp/$NAME
+WORK_DIR="/tmp/$NAME"
 
 # ElasticSearch configuration directory
-CONF_DIR=/etc/$NAME
+CONF_DIR="/etc/$NAME"
 
 # ElasticSearch configuration file (elasticsearch.yml)
-CONF_FILE=$CONF_DIR/elasticsearch.yml
+CONF_FILE="$CONF_DIR/elasticsearch.yml"
 
 # End of variables that can be overwritten in $DEFAULT
+
+
+# Define other required variables
+PID_FILE="/var/run/$NAME.pid"
+DAEMON="${ES_HOME}/elasticsearch"
+DAEMON_OPTS="-p $PID_FILE -Des.config=$CONF_FILE -Des.path.home=$ES_HOME -Des.path.logs=$LOG_DIR -Des.path.data=$DATA_DIR -Des.path.work=$WORK_DIR -Des.path.conf=$CONF_DIR"
 
 # overwrite settings from default file
 if [ -f "$DEFAULT" ]; then
 	. "$DEFAULT"
 fi
-
-# Define other required variables
-PID_FILE=/var/run/$NAME.pid
-DAEMON=/usr/bin/elasticsearch
-DAEMON_OPTS="-p $PID_FILE -Des.config=$CONF_FILE -Des.path.home=$ES_HOME -Des.path.logs=$LOG_DIR -Des.path.data=$DATA_DIR -Des.path.work=$WORK_DIR -Des.path.conf=$CONF_DIR"
 
 export ES_MIN_MEM ES_MAX_MEM
 
