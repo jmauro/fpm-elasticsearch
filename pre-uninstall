@@ -3,6 +3,11 @@ set -e
 
 case "$1" in
 	remove)
+		# --[ First stop service ]
+		[ -x /usr/sbin/invoke-rc.d ] && /usr/sbin/invoke-rc.d elasticsearch stop
+		[ -x /sbin/service ] && /sbin/service elasticsearch stop
+
+		# --[ Then remove service ]--
 		[ -x /sbin/insserv ] && /sbin/insserv -r elasticsearch
 		[ -x /sbin/chkconfig ] && /sbin/chkconfig -del elasticsearch > /dev/null
 		
