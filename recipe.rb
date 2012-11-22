@@ -55,6 +55,7 @@ class Elasticsearch < FPM::Cookery::Recipe
   end
 
   def install
+    FileUtils.chown_R '0', '0', '.'
     etc('elasticsearch').install Dir['config/*']
     etc('init.d').install_p workdir('elasticsearch.init'), 'elasticsearch'
     etc('default').install_p workdir('elasticsearch.default'), 'elasticsearch'
