@@ -82,13 +82,17 @@ CONF_FILE="$CONF_DIR/elasticsearch.yml"
 
 # End of variables that can be overwritten in $DEFAULT
 
+# In case $CONF_FILE/$ES_HOME/$LOG_DIR/$DATA_DIR/$WORK_DIR is set in default
+if [ -f "$DEFAULT" ]; then
+	. "$DEFAULT"
+fi
 
 # Define other required variables
 PID_FILE="/var/run/$NAME.pid"
 DAEMON="${ES_HOME}/bin/elasticsearch"
 DAEMON_OPTS="-p $PID_FILE -Des.config=$CONF_FILE -Des.path.home=$ES_HOME -Des.path.logs=$LOG_DIR -Des.path.data=$DATA_DIR -Des.path.work=$WORK_DIR -Des.path.conf=$CONF_DIR"
 
-# overwrite settings from default file
+# In case $DAEMON_OPTS/$DAEMON/$PID_FILE is also changed in /etc/default/elasticsearch
 if [ -f "$DEFAULT" ]; then
 	. "$DEFAULT"
 fi
